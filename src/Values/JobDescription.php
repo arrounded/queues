@@ -30,4 +30,28 @@ class JobDescription
 		$this->class = $class;
 		$this->payload = $payload;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getClass()
+	{
+		return $this->class;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getQueue()
+	{
+		return $this->queue;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getPayload()
+	{
+		return $this->payload;
+	}
 }

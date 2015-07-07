@@ -3,6 +3,7 @@
 namespace Arrounded\Queues;
 
 use Arrounded\Queues\Values\JobDescription;
+use Illuminate\Contracts\Queue\Queue;
 
 class Queues
 {
@@ -25,8 +26,17 @@ class Queues
 	 */
 	protected $params = [];
 
-	public function __construct()
+	/**
+	 * @var Queue
+	 */
+	protected $queue;
+
+	/**
+	 * @param Queue $queue
+	 */
+	public function __construct(Queue $queue)
 	{
+		$this->queue = $queue;
 		$this->priority = static::PRIORITY_NONE;
 	}
 
@@ -79,6 +89,18 @@ class Queues
 	}
 
 	/**
+	 * @param string $priority
+	 *
+	 * @return $this
+	 */
+	public function priority($priority = self::PRIORITY_NONE)
+	{
+		$this->priority = $priority;
+
+		return $this;
+	}
+
+	/**
 	 * @return JobDescription
 	 */
 	public function push()
@@ -88,6 +110,8 @@ class Queues
 			array_get($this->params, 'class'),
 			array_get($this->params, 'payload', [])
 		);
+
+		$this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
 
 		return $job;
 	}
