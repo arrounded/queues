@@ -31,4 +31,16 @@ class QueuesTest extends QueuesTestCase
 			'foo' => 'bar'
 		]), $job);
 	}
+
+	public function testCanPrefixQueueName()
+	{
+		$this->queues->setPrefix('foo');
+		$job = $this->queues
+			->on('foo')
+			->uses('Bar')
+			->push();
+
+		$this->assertInstanceOf(JobDescription::class, $job);
+		$this->assertEquals(new JobDescription('foo_foo', 'Bar'), $job);
+	}
 }

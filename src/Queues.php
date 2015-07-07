@@ -35,7 +35,7 @@ class Queues
 	 */
 	public function on($queue)
 	{
-		$this->params['queue'] = $queue;
+		$this->params['queue'] = $this->getQueueName($queue);
 
 		return $this;
 	}
@@ -76,5 +76,19 @@ class Queues
 		);
 
 		return $job;
+	}
+
+	/**
+	 * @param $queue
+	 *
+	 * @return string
+	 */
+	protected function getQueueName($queue)
+	{
+		if (!$this->prefix) {
+			return $queue;
+		}
+
+		return implode('_', [$this->prefix, $queue]);
 	}
 }
