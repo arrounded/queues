@@ -72,4 +72,20 @@ class QueuesTest extends QueuesTestCase
 		$this->assertInstanceOf(JobDescription::class, $job);
 		$this->assertEquals(new JobDescription('foo_foo_high', 'Bar'), $job);
 	}
+
+	public function testCanDelayJobs()
+	{
+		$this->connection->shouldReceive('later')->with(10, 'Bar', [], 'foo_foo_high');
+
+		$this->queues->setPrefix('foo');
+		$job = $this->queues
+			->on('foo')
+			->uses('Bar')
+			->priority(Queues::PRIORITY_HIGH)
+			->delay(10)
+			->push();
+
+		$this->assertInstanceOf(JobDescription::class, $job);
+		$this->assertEquals(new JobDescription('foo_foo_high', 'Bar', [], 10), $job);
+	}
 }

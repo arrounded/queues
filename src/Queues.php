@@ -101,6 +101,18 @@ class Queues
 	}
 
 	/**
+	 * @param $seconds
+	 *
+	 * @return $this
+	 */
+	public function delay($seconds)
+	{
+		$this->params['delay'] = $seconds;
+
+		return $this;
+	}
+
+	/**
 	 * @return JobDescription
 	 */
 	public function push()
@@ -108,10 +120,11 @@ class Queues
 		$job = new JobDescription(
 			$this->getQueueName(array_get($this->params, 'queue')),
 			array_get($this->params, 'class'),
-			array_get($this->params, 'payload', [])
+			array_get($this->params, 'payload', []),
+			array_get($this->params, 'delay', 0)
 		);
 
-		$this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
+		$this->queue($job);
 
 		return $job;
 	}
@@ -130,5 +143,19 @@ class Queues
 		}
 
 		return implode('_', $parts);
+	}
+
+	/**
+	 * @param JobDescription $job
+	 */
+	protected function queue(JobDescription $job)
+	{
+		if ($job->isDelayed()) {
+			$this->queue->later($job->getDelay(), $job->getClass(), $job->getPayload(), $job->getQueue());
+			return;
+		}
+
+		$this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
+		return;
 	}
 }
