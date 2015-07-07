@@ -6,15 +6,29 @@ use Arrounded\Queues\Values\JobDescription;
 
 class Queues
 {
+	const PRIORITY_HIGH = 'high';
+	const PRIORITY_NONE = 'normal';
+	const PRIORITY_LOW = 'low';
+
 	/**
 	 * @var string
 	 */
 	protected $prefix;
 
 	/**
+	 * @var string
+	 */
+	protected $priority;
+
+	/**
 	 * @var array
 	 */
 	protected $params = [];
+
+	public function __construct()
+	{
+		$this->priority = static::PRIORITY_NONE;
+	}
 
 	/**
 	 * @param string $prefix
@@ -35,7 +49,7 @@ class Queues
 	 */
 	public function on($queue)
 	{
-		$this->params['queue'] = $this->getQueueName($queue);
+		$this->params['queue'] = $queue;
 
 		return $this;
 	}
@@ -70,7 +84,7 @@ class Queues
 	public function push()
 	{
 		$job = new JobDescription(
-			array_get($this->params, 'queue'),
+			$this->getQueueName(array_get($this->params, 'queue')),
 			array_get($this->params, 'class'),
 			array_get($this->params, 'payload', [])
 		);
@@ -85,10 +99,12 @@ class Queues
 	 */
 	protected function getQueueName($queue)
 	{
-		if (!$this->prefix) {
-			return $queue;
+		$parts = [$queue, $this->priority];
+
+		if ($this->prefix) {
+			array_unshift($parts, $this->prefix);
 		}
 
-		return implode('_', [$this->prefix, $queue]);
+		return implode('_', $parts);
 	}
 }

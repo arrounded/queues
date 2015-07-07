@@ -27,7 +27,7 @@ class QueuesTest extends QueuesTestCase
 			->push();
 
 		$this->assertInstanceOf(JobDescription::class, $job);
-		$this->assertEquals(new JobDescription('foo', 'Bar', [
+		$this->assertEquals(new JobDescription('foo_normal', 'Bar', [
 			'foo' => 'bar'
 		]), $job);
 	}
@@ -41,6 +41,6 @@ class QueuesTest extends QueuesTestCase
 			->push();
 
 		$this->assertInstanceOf(JobDescription::class, $job);
-		$this->assertEquals(new JobDescription('foo_foo', 'Bar'), $job);
+		$this->assertEquals(new JobDescription('foo_foo_normal', 'Bar'), $job);
 	}
 }
