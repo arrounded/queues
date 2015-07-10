@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\Queue;
 class Queues
 {
 	const PRIORITY_HIGH = 'high';
-	const PRIORITY_NONE = 'normal';
+	const PRIORITY_NORMAL = 'normal';
 	const PRIORITY_LOW = 'low';
 
 	/**
@@ -19,7 +19,7 @@ class Queues
 	/**
 	 * @var string
 	 */
-	protected $priority;
+	protected $priority = self::PRIORITY_NORMAL;
 
 	/**
 	 * @var array
@@ -37,7 +37,6 @@ class Queues
 	public function __construct(Queue $queue)
 	{
 		$this->queue = $queue;
-		$this->priority = static::PRIORITY_NONE;
 	}
 
 	/**
@@ -147,6 +146,8 @@ class Queues
 
 	/**
 	 * @param JobDescription $job
+	 *
+	 * @return void
 	 */
 	protected function queue(JobDescription $job)
 	{
