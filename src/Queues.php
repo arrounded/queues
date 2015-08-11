@@ -3,7 +3,7 @@
 namespace Arrounded\Queues;
 
 use Arrounded\Queues\Values\JobDescription;
-use Illuminate\Contracts\Queue\Queue;
+use Illuminate\Queue\QueueInterface;
 
 class Queues
 {
@@ -27,14 +27,14 @@ class Queues
 	protected $params = [];
 
 	/**
-	 * @var Queue
+	 * @var QueueInterface
 	 */
 	protected $queue;
 
 	/**
-	 * @param Queue $queue
+	 * @param QueueInterface $queue
 	 */
-	public function __construct(Queue $queue)
+	public function __construct(QueueInterface $queue)
 	{
 		$this->queue = $queue;
 	}

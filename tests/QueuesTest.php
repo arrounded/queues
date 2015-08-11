@@ -5,7 +5,7 @@ namespace Arrounded\Queues;
 use Arrounded\Queues\Values\JobDescription;
 use Mockery;
 use Mockery\MockInterface;
-use Illuminate\Contracts\Queue\Queue;
+use Illuminate\Queue\QueueInterface;
 
 class QueuesTest extends QueuesTestCase
 {
@@ -21,7 +21,7 @@ class QueuesTest extends QueuesTestCase
 
 	public function setUp()
 	{
-		$this->connection = Mockery::mock(Queue::class);
+		$this->connection = Mockery::mock(QueueInterface::class);
 
 		$this->queues = new Queues($this->connection);
 	}
