@@ -17,7 +17,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public function register()
 	{
 		$this->app->singleton(Queues::class, function () {
-			$queues = new Queues($this->app['queue.connection']);
+			$queues = new Queues($this->app['queue']->connection());
 			$queues->setPrefix($this->app->environment());
 
 			return $queues;
