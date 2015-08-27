@@ -92,7 +92,7 @@ class Queues
 	 *
 	 * @return $this
 	 */
-	public function priority($priority = self::PRIORITY_NONE)
+	public function priority($priority = self::PRIORITY_NORMAL)
 	{
 		$this->priority = $priority;
 
@@ -152,11 +152,9 @@ class Queues
 	protected function queue(JobDescription $job)
 	{
 		if ($job->isDelayed()) {
-			$this->queue->later($job->getDelay(), $job->getClass(), $job->getPayload(), $job->getQueue());
-			return;
+			return $this->queue->later($job->getDelay(), $job->getClass(), $job->getPayload(), $job->getQueue());
 		}
 
-		$this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
-		return;
+		return $this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
 	}
 }
