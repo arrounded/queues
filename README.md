@@ -16,6 +16,8 @@ Via Composer
 $ composer require arrounded/queues
 ```
 
+A Laravel 4.2 version also availabe: `composer require arrounded/queues:dev-laravel/4.2`
+
 ## Usage
 
 First add the module's service provider and facade to config/app.php:
@@ -62,7 +64,7 @@ __Delaying execution__
 Queues::on('foo')->uses(Foobar::class)->delay(10)->push();
 ```
 
-This will delay the execution of the job by 10 seconds. 
+This will delay the execution of the job by 10 seconds.
 
 ### Prefixing queue names
 
@@ -73,6 +75,18 @@ ServiceProvider:
 $this->app['queues']->setPrefix('foobar') // foobar_foo_normal
 ```
 
+__Disabling queueing__
+
+In some cases you might want to disable queueing all together (for example during integration/functional tests)
+
+```php
+// To disable
+$this->app['queues']->disabled()
+
+// To re-enable
+$this->app['queues']->disabled(false)
+```
+
 ### Dependency Injection
 
 You can also use dependency injection:
@@ -80,7 +94,7 @@ You can also use dependency injection:
 ```php
 use Arrounded\Queues\Queues;
 
-class FooService 
+class FooService
 {
 	public function __construct(Queues $queues)
 	{

@@ -88,4 +88,22 @@ class QueuesTest extends QueuesTestCase
 		$this->assertInstanceOf(JobDescription::class, $job);
 		$this->assertEquals(new JobDescription('foo_foo_high', 'Bar', [], 10), $job);
 	}
+
+    public function testsCanBeDisabled()
+    {
+        $payload = [
+            'foo' => 'bar',
+        ];
+
+        $job = $this->queues
+            ->disabled()
+            ->on('foo')
+            ->uses('Bar')
+            ->with($payload)
+            ->push();
+
+        $this->assertInstanceOf(JobDescription::class, $job);
+        $this->assertEquals(new JobDescription('foo_normal', 'Bar', $payload), $job);
+    }
+
 }
