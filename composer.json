@@ -31,10 +31,7 @@
     "autoload-dev": {
         "psr-4": {
             "Arrounded\\Queues\\": "tests"
-        },
-        "files": [
-            "tests/helpers.php"
-        ]
+        }
     },
     "scripts": {
         "test": "phpunit",

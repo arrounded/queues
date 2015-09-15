@@ -31,6 +31,11 @@ class Queues
 	 */
 	protected $queue;
 
+    /**
+     * @var bool
+     */
+    protected $disabled = false;
+
 	/**
 	 * @param QueueInterface $queue
 	 */
@@ -39,7 +44,20 @@ class Queues
 		$this->queue = $queue;
 	}
 
-	/**
+    /**
+     * @param bool|true $value
+     *
+     * @return $this
+     */
+    public function disabled($value = true)
+    {
+        $this->disabled = $value;
+
+        return $this;
+    }
+
+
+    /**
 	 * @param string $prefix
 	 *
 	 * @return Queues
@@ -144,17 +162,21 @@ class Queues
 		return implode('_', $parts);
 	}
 
-	/**
-	 * @param JobDescription $job
-	 *
-	 * @return void
-	 */
-	protected function queue(JobDescription $job)
-	{
-		if ($job->isDelayed()) {
-			return $this->queue->later($job->getDelay(), $job->getClass(), $job->getPayload(), $job->getQueue());
-		}
+    /**
+     * @param JobDescription $job
+     *
+     * @return void
+     */
+    protected function queue(JobDescription $job)
+    {
+        if ($this->disabled) {
+            return;
+        }
 
-		return $this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
-	}
+        if ($job->isDelayed()) {
+            return $this->queue->later($job->getDelay(), $job->getClass(), $job->getPayload(), $job->getQueue());
+        }
+
+        return $this->queue->push($job->getClass(), $job->getPayload(), $job->getQueue());
+    }
 }
